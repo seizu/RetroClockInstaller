@@ -1,0 +1,17 @@
+{
+  "name": "RetroClock",
+  "version": "latest",
+  "new_install_prompt_erase": true,
+  "builds": [
+    {
+      "chipFamily": "ESP32",
+      "parts": [
+        { "path": "https://raw.githubusercontent.com/seizu/RetroClock/master/firmware/bootloader.bin", "offset": 4096 },
+        { "path": "https://raw.githubusercontent.com/seizu/RetroClock/master/firmware/boot_app0.bin",  "offset": 57344 },
+        { "path": "https://retroclock.seizu.workers.dev/partitions.bin", "offset": 32768 },
+        { "path": "https://retroclock.seizu.workers.dev/firmware.bin",   "offset": 65536 },
+        { "path": "https://retroclock.seizu.workers.dev/littlefs.bin",   "offset": 2949120 }
+      ]
+    }
+  ]
+}

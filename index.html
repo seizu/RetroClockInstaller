@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RetroClock — Web Installer</title>
+
+  <!-- ESP Web Tools (Web Serial flasher — Chromium-based desktop browsers only) -->
+  <script type="module"
+          src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
+
+  <style>
+    :root { color-scheme: dark; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #11131a;
+      color: #e6e6e6;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.55;
+    }
+    .card {
+      width: min(560px, 92vw);
+      background: #1b1e27;
+      border: 1px solid #2c303c;
+      border-radius: 14px;
+      padding: 32px 34px;
+      box-shadow: 0 10px 40px rgba(0,0,0,.45);
+    }
+    h1 { margin: 0 0 4px; font-size: 1.7rem; letter-spacing: .5px; }
+    .sub { margin: 0 0 22px; color: #9aa2b1; font-size: .95rem; }
+    .install { margin: 8px 0 20px; }
+    ol { padding-left: 20px; margin: 0 0 18px; }
+    li { margin: 6px 0; }
+    .note {
+      font-size: .85rem; color: #9aa2b1;
+      border-top: 1px solid #2c303c; padding-top: 16px; margin-top: 8px;
+    }
+    .warn {
+      background: #3a2a12; border: 1px solid #6b4e1f; color: #f0d9a8;
+      border-radius: 8px; padding: 10px 12px; font-size: .85rem; margin: 0 0 20px;
+    }
+    .error {
+      background: #3a1414; border: 1px solid #7a2a2a; color: #ffc4c4;
+      border-radius: 8px; padding: 14px 16px; font-size: .9rem; margin: 0 0 4px;
+    }
+    .error b { color: #fff; }
+    a { color: #6db3ff; }
+    code { background: #11131a; padding: 1px 6px; border-radius: 5px; font-size: .85em; }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>RetroClock</h1>
+    <p class="sub">Web installer for the ESP32 Cheap Yellow Display (CYD&nbsp;2432S028)</p>
+
+    <!-- Shown when the browser lacks Web Serial -->
+    <div id="browser-error" class="error" hidden>
+      ❌ <b>This browser can't flash the device.</b><br>
+      It doesn't support <b>Web Serial</b>. Please open this page on a
+      <b>desktop</b> computer in one of:
+      <b>Google&nbsp;Chrome</b>, <b>Microsoft&nbsp;Edge</b> or <b>Opera</b>
+      (any Chromium-based browser).<br>
+      <span style="opacity:.85">Not supported: Firefox, Safari, and all
+      phones/tablets (incl. iPhone&nbsp;/&nbsp;iPad).</span>
+    </div>
+
+    <!-- Shown when the browser supports Web Serial -->
+    <div id="app" hidden>
+      <div class="warn">
+        ✅ Web Serial detected. Connect the CYD and click <b>Install</b>.
+      </div>
+
+      <ol>
+        <li>Connect the CYD to your PC via USB.</li>
+        <li>Click <b>Install</b> and pick the device's serial port.</li>
+        <li>When asked, choose <b>Erase device</b> for a clean install.</li>
+      </ol>
+
+      <div class="install">
+        <esp-web-install-button manifest="./manifest.json">
+          <span slot="unsupported" class="error">
+            Your browser can't flash over USB — use desktop Chrome, Edge or Opera.
+          </span>
+          <span slot="not-allowed" class="error">
+            This page must be served over HTTPS (or http://localhost).
+          </span>
+        </esp-web-install-button>
+      </div>
+    </div>
+
+    <p class="note">
+      Flashes bootloader, partition table, firmware and the LittleFS image
+      (palette + fonts). Powered by
+      <a href="https://esphome.github.io/esp-web-tools/" target="_blank" rel="noopener">ESP&nbsp;Web&nbsp;Tools</a>.
+      Source: <a href="https://github.com/seizu/RetroClock" target="_blank" rel="noopener">RetroClock</a>.
+    </p>
+  </main>
+
+  <script>
+    // Web Serial is the hard requirement for flashing. Show the matching block.
+    var serialOk = 'serial' in navigator;
+    document.getElementById('browser-error').hidden = serialOk;
+    document.getElementById('app').hidden = !serialOk;
+  </script>
+</body>
+</html>
